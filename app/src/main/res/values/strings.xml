@@ -1,0 +1,8 @@
+<resources>
+
+    <string name="app_name">Shared Element Transition</string>
+    <string name="title_activity_second">SecondActivity</string>
+
+    <string name="transition_string">any unique string will do</string>
+
+</resources>
