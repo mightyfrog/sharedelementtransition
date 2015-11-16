@@ -61,6 +61,21 @@ public class MainActivity extends AppCompatActivity {
                     ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
                 }
             });
+            vh.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, ThirdActivity.class);
+                    intent.putExtra("backgroundColor", COLORS[position]);
+
+                    // Define the view that the animation will start from
+                    ActivityOptionsCompat options =
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this,
+                                    vh.mTextView, getString(R.string.transition_string));
+                    ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
+
+                    return false;
+                }
+            });
         }
 
         @Override
