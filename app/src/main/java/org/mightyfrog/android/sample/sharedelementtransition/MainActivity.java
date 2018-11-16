@@ -2,6 +2,7 @@ package org.mightyfrog.android.sample.sharedelementtransition;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 /**
  * https://medium.com/android-news/easy-android-shared-element-transition-ac36952a4a4
+ * https://www.androiddesignpatterns.com/2015/03/activity-postponed-shared-element-transitions-part3b.html
  *
  * @author Shigehiro Soejima
  */
@@ -23,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RecyclerView rv = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView rv = findViewById(R.id.recycler_view);
         rv.setAdapter(new MyAdapter());
         rv.setLayoutManager(new GridLayoutManager(this, 2));
     }
@@ -38,21 +40,22 @@ public class MainActivity extends AppCompatActivity {
                 0xffff9800, 0xffff5722, 0xff795548, 0xff9e9e9e, 0xff607d8b, 0xff212121
         };
 
+        @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new MyViewHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.rv_item, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
             final MyViewHolder vh = (MyViewHolder) holder;
             vh.mTextView.setBackgroundColor(COLORS[position]);
             vh.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                    intent.putExtra("backgroundColor", COLORS[position]);
+                    intent.putExtra("backgroundColor", COLORS[vh.getAdapterPosition()]);
 
                     // Define the view that the animation will start from
                     ActivityOptionsCompat options =
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public boolean onLongClick(View v) {
                     Intent intent = new Intent(MainActivity.this, ThirdActivity.class);
-                    intent.putExtra("backgroundColor", COLORS[position]);
+                    intent.putExtra("backgroundColor", COLORS[vh.getAdapterPosition()]);
 
                     // Define the view that the animation will start from
                     ActivityOptionsCompat options =
@@ -87,12 +90,12 @@ public class MainActivity extends AppCompatActivity {
          *
          */
         class MyViewHolder extends RecyclerView.ViewHolder {
-            TextView mTextView;
+            final TextView mTextView;
 
-            public MyViewHolder(View itemView) {
+            MyViewHolder(View itemView) {
                 super(itemView);
 
-                mTextView = (TextView) itemView.findViewById(R.id.text);
+                mTextView = itemView.findViewById(R.id.text);
             }
         }
     }
